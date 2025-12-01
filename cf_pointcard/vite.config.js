@@ -3,9 +3,9 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  root: 'src', // ソースコードの場所
+  // root: 'src', // 削除：ルートディレクトリをプロジェクトルートにする
   build: {
-    outDir: '../dist', // Vercelなどの標準的な出力先
+    outDir: 'dist', // 標準的な出力先
     emptyOutDir: true,
   },
   server: {
