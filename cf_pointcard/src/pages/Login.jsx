@@ -92,10 +92,12 @@ export default function Login() {
         <div className="bg-white rounded-2xl shadow-sm p-8">
           <div className="space-y-5">
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Email Address</label>
+              <label htmlFor="email" className="block text-xs font-bold text-gray-500 uppercase mb-2">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
                 <input
+                  id="email"
+                  name="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -106,10 +108,12 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Password</label>
+              <label htmlFor="password" className="block text-xs font-bold text-gray-500 uppercase mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
                 <input
+                  id="password"
+                  name="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -136,7 +140,7 @@ export default function Login() {
               type="button"
               onClick={handleAuth}
               disabled={loading}
-              className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold shadow-lg shadow-gray-900/20 hover:bg-black hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="relative z-50 w-full bg-gray-900 text-white py-4 rounded-xl font-bold shadow-lg shadow-gray-900/20 hover:bg-black hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               {loading ? 'Loading...' : (isSignUp ? 'Create Account' : 'Sign In')}
               {!loading && <ArrowRight size={20} />}
