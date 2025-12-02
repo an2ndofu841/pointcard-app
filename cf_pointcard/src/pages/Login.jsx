@@ -82,7 +82,7 @@ export default function Login() {
             ID
           </div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {isSignUp ? 'アカウント作成' : 'おかえりなさい'}
+            {isSignUp ? 'アカウント作成' : 'おかえりなさい v1.0.2'}
           </h1>
           <p className="text-gray-500 mt-2 text-sm">
             {isSignUp ? 'ファン登録してポイントを貯めよう' : 'ログインしてカードを確認'}
