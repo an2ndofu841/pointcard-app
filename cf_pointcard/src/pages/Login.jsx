@@ -8,8 +8,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [message, setMessage] = useState('');
+  
+  // デバッグ用ログ
+  const [debugLogs, setDebugLogs] = useState([]);
+  const addLog = (msg) => setDebugLogs(prev => [...prev, `${new Date().toLocaleTimeString()} ${msg}`]);
 
-  // formのonSubmitではなく、ボタンのonClickで発火させる
   const handleAuth = async () => {
     if (!email || !password) {
         setMessage('メールアドレスとパスワードを入力してください');
@@ -18,24 +21,56 @@ export default function Login() {
 
     setLoading(true);
     setMessage('');
+    setDebugLogs([]); // ログクリア
+    addLog('処理開始: ボタンクリック');
 
     try {
       if (isSignUp) {
+        addLog('SignUp処理開始');
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
+        addLog('SignUp成功');
         setMessage('確認メールを送信しました');
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        addLog('SignIn処理開始: supabase呼び出し');
         
-        // 成功したらアラートを出して強制遷移
-        // alert('ログイン成功！トップページへ移動します。'); 
-        window.location.href = '/';
+        // タイムアウト付きでSignInを実行
+        const signInPromise = supabase.auth.signInWithPassword({ email, password });
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000));
+
+        try {
+            const { error } = await Promise.race([signInPromise, timeoutPromise]);
+            if (error) throw error;
+            addLog('SignIn成功: 応答あり');
+        } catch (err) {
+            if (err.message === 'Timeout') {
+                addLog('SignInタイムアウト: 強制確認へ');
+            } else {
+                throw err;
+            }
+        }
+
+        addLog('セッション確認中...');
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session) {
+            addLog('セッションあり: 遷移を実行します');
+            setMessage('ログイン成功！遷移します...');
+            setTimeout(() => {
+                addLog('window.location.href = "/" 実行');
+                window.location.href = '/';
+            }, 500);
+        } else {
+            addLog('エラー: セッションが取得できません');
+            throw new Error('ログインに失敗しました（セッションなし）');
+        }
       }
     } catch (error) {
+      addLog(`エラー発生: ${error.message}`);
       setMessage(error.message);
     } finally {
       setLoading(false);
+      addLog('処理終了(finally)');
     }
   };
 
@@ -55,7 +90,6 @@ export default function Login() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-8">
-          {/* formタグをdivに変更し、エンターキーでの送信を防ぐ（誤動作防止） */}
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Email Address</label>
@@ -91,8 +125,15 @@ export default function Login() {
               </div>
             )}
 
+            {/* デバッグログ表示エリア */}
+            {debugLogs.length > 0 && (
+                <div className="p-2 bg-black text-green-400 font-mono text-xs rounded overflow-hidden">
+                    {debugLogs.map((log, i) => <div key={i}>{log}</div>)}
+                </div>
+            )}
+
             <button
-              type="button" // submitではなくbuttonにする
+              type="button"
               onClick={handleAuth}
               disabled={loading}
               className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold shadow-lg shadow-gray-900/20 hover:bg-black hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2"
