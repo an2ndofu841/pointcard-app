@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../supabase';
 import { ArrowRight, Lock, Mail, User } from 'lucide-react';
 
-export default function Login() {
+export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);

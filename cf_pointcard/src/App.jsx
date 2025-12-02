@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
+import LoginPage from './pages/LoginPage';
 import AdminLogin from './pages/AdminLogin';
 import UserRewards from './pages/user/Rewards';
 import AdminRewards from './pages/admin/Rewards';
@@ -345,10 +345,10 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={
-            !user ? <Login /> : 
+            !user ? <LoginPage /> : 
             (role === 'admin' ? <AdminDashboard user={user} handleLogout={handleLogout} /> : <UserHome user={user} handleLogout={handleLogout} />)
         } />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/scan" element={
             <AdminRoute role={role} loading={loading}><Scan /></AdminRoute>
