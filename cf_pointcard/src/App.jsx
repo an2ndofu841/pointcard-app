@@ -261,8 +261,10 @@ function Scan() {
 
                 <form onSubmit={handleGrant} className="space-y-6">
                     <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">User ID</label>
+                        <label htmlFor="scan-userid" className="block text-xs font-bold text-gray-500 uppercase mb-2">User ID</label>
                         <input
+                            id="scan-userid"
+                            name="userId"
                             type="text"
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
@@ -273,7 +275,7 @@ function Scan() {
                     </div>
                     
                     <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Points</label>
+                        <label htmlFor="scan-points" className="block text-xs font-bold text-gray-500 uppercase mb-2">Points</label>
                         <div className="flex gap-2">
                             {[1, 2, 3, 5, 10].map(pt => (
                                 <button
@@ -287,6 +289,8 @@ function Scan() {
                             ))}
                         </div>
                         <input
+                            id="scan-points"
+                            name="points"
                             type="number"
                             value={points}
                             onChange={(e) => setPoints(Number(e.target.value))}

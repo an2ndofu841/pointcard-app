@@ -57,22 +57,28 @@ export default function AdminRewards({ user }) {
                 </h3>
                 <form onSubmit={handleAdd} className="space-y-4">
                     <div>
-                        <label className="text-xs font-bold text-gray-500 uppercase">景品名</label>
+                        <label htmlFor="reward-title" className="text-xs font-bold text-gray-500 uppercase">景品名</label>
                         <input 
+                            id="reward-title"
+                            name="title"
                             className="w-full border p-2 rounded-lg mt-1"
                             value={title} onChange={e => setTitle(e.target.value)} required
                         />
                     </div>
                     <div>
-                        <label className="text-xs font-bold text-gray-500 uppercase">必要ポイント</label>
+                        <label htmlFor="reward-points" className="text-xs font-bold text-gray-500 uppercase">必要ポイント</label>
                         <input 
+                            id="reward-points"
+                            name="points"
                             type="number" className="w-full border p-2 rounded-lg mt-1"
                             value={points} onChange={e => setPoints(Number(e.target.value))} required
                         />
                     </div>
                     <div>
-                        <label className="text-xs font-bold text-gray-500 uppercase">説明</label>
+                        <label htmlFor="reward-description" className="text-xs font-bold text-gray-500 uppercase">説明</label>
                         <input 
+                            id="reward-description"
+                            name="description"
                             className="w-full border p-2 rounded-lg mt-1"
                             value={description} onChange={e => setDescription(e.target.value)}
                         />
