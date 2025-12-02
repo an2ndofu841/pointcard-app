@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Lock, Mail, User } from 'lucide-react';
@@ -11,6 +11,24 @@ export default function Login() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  // ログイン状態を監視して自動遷移
+  useEffect(() => {
+    const checkUser = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            window.location.href = '/'; // 念の為リロード遷移
+        }
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+            window.location.href = '/';
+        }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   const handleAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -22,17 +40,13 @@ export default function Login() {
         if (error) throw error;
         setMessage('確認メールを送信しました');
       } else {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        // サインイン処理だけ行う（遷移はuseEffectに任せる）
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        
-        // ログイン成功時にページを強制リロードしてルートへ
-        // React Routerの状態遷移だけではSupabaseのセッション状態更新が間に合わない場合があるため
-        window.location.href = '/';
       }
     } catch (error) {
       setMessage(error.message);
-    } finally {
-      setLoading(false);
+      setLoading(false); // エラー時のみloading解除（成功時は遷移するので解除不要）
     }
   };
 
