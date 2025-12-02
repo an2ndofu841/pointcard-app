@@ -82,7 +82,7 @@ export default function LoginPage() {
             ID
           </div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {isSignUp ? 'アカウント作成' : 'おかえりなさい v1.0.2'}
+            {isSignUp ? 'アカウント作成' : 'おかえりなさい v1.0.4'}
           </h1>
           <p className="text-gray-500 mt-2 text-sm">
             {isSignUp ? 'ファン登録してポイントを貯めよう' : 'ログインしてカードを確認'}
@@ -134,7 +134,7 @@ export default function LoginPage() {
                 position: 'fixed', top: 0, left: 0, width: '100%', background: 'red', color: 'white',
                 padding: '10px', zIndex: 99999, fontSize: '14px', fontWeight: 'bold'
             }}>
-                DEBUG MODE: v1.0.3<br/>
+                DEBUG MODE: v1.0.4<br/>
                 LOGS: {debugLogs.length}件<br/>
                 {debugLogs.map((log, i) => <div key={i}>{log}</div>)}
             </div>
