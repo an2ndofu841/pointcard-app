@@ -40,13 +40,20 @@ export default function Login() {
         if (error) throw error;
         setMessage('確認メールを送信しました');
       } else {
-        // サインイン処理だけ行う（遷移はuseEffectに任せる）
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        
+        // 最終手段：成功したら強制的に遷移させる
+        // setTimeoutを使って非同期処理の完了を待たずに遷移予約を入れる
+        // window.location.href と navigate 両方実行
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 500);
+        navigate('/');
       }
     } catch (error) {
       setMessage(error.message);
-      setLoading(false); // エラー時のみloading解除（成功時は遷移するので解除不要）
+      setLoading(false); 
     }
   };
 
