@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { supabase } from '../supabase';
-import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Lock, Mail, User } from 'lucide-react';
 
 export default function Login() {
@@ -9,25 +8,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();
-
-  // ログイン状態を監視して自動遷移
-  useEffect(() => {
-    const checkUser = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            window.location.href = '/'; // 念の為リロード遷移
-        }
-    };
-    checkUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-            window.location.href = '/';
-        }
-    });
-    return () => subscription.unsubscribe();
-  }, []);
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -43,17 +23,13 @@ export default function Login() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         
-        // 最終手段：成功したら強制的に遷移させる
-        // setTimeoutを使って非同期処理の完了を待たずに遷移予約を入れる
-        // window.location.href と navigate 両方実行
-        setTimeout(() => {
-            window.location.href = '/';
-        }, 500);
-        navigate('/');
+        // AdminLoginと同じ方式：成功したら即座に強制リロード
+        window.location.href = '/';
       }
     } catch (error) {
       setMessage(error.message);
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
   };
 
