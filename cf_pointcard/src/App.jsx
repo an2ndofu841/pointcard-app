@@ -122,8 +122,19 @@ function useUser() {
       setLoading(false);
     };
     fetchUser();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (!session) { setUser(null); setRole(null); }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+        if (session?.user) {
+            setUser(session.user);
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', session.user.id)
+              .single();
+            setRole(profile?.role || 'user');
+        } else {
+            setUser(null);
+            setRole(null);
+        }
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -285,7 +296,8 @@ function Scan() {
                         />
                     </div>
 
-                    <button type="submit" className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-black active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                    <button type="submit" className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-black active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                    >
                         <CheckCircle2 size={20} />
                         ポイントを付与する
                     </button>
