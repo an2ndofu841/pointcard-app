@@ -22,8 +22,13 @@ export function Navbar({ user, role, onLogout }) {
             </Link>
           )}
           <button 
-            onClick={onLogout} 
-            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+            onClick={(e) => {
+                console.log('Logout clicked');
+                if(confirm('ログアウトしますか？')) {
+                    onLogout();
+                }
+            }} 
+            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors relative z-50"
           >
             <LogOut size={20} />
           </button>
