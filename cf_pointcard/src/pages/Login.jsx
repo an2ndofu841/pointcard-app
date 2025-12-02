@@ -129,12 +129,15 @@ export default function Login() {
               </div>
             )}
 
-            {/* デバッグログ表示エリア */}
-            {debugLogs.length > 0 && (
-                <div className="p-2 bg-black text-green-400 font-mono text-xs rounded overflow-hidden">
-                    {debugLogs.map((log, i) => <div key={i}>{log}</div>)}
-                </div>
-            )}
+            {/* デバッグログ表示エリア（固定表示に変更） */}
+            <div className="fixed top-0 left-0 w-full bg-black/90 text-green-400 font-mono text-xs p-2 z-[9999] max-h-40 overflow-auto border-b border-green-500">
+                <p className="font-bold text-white border-b border-gray-700 mb-1">DEBUG LOG:</p>
+                {debugLogs.length === 0 ? (
+                    <p className="opacity-50">（操作待ち...）</p>
+                ) : (
+                    debugLogs.map((log, i) => <div key={i}>{log}</div>)
+                )}
+            </div>
 
             <button
               type="button"

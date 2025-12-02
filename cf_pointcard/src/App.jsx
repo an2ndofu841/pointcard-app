@@ -105,8 +105,13 @@ function useUser() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('App: useUser mounted');
+    
     const fetchUser = async () => {
+      console.log('App: fetchUser checking session...');
       const { data: { session } } = await supabase.auth.getSession();
+      console.log('App: session result:', session ? 'Found' : 'None');
+      
       if (session?.user) {
         setUser(session.user);
         const { data: profile } = await supabase
@@ -121,8 +126,11 @@ function useUser() {
       }
       setLoading(false);
     };
+    
     fetchUser();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log('App: Auth State Change:', event);
         if (session?.user) {
             setUser(session.user);
             const { data: profile } = await supabase
@@ -135,6 +143,7 @@ function useUser() {
             setUser(null);
             setRole(null);
         }
+        setLoading(false);
     });
     return () => subscription.unsubscribe();
   }, []);
