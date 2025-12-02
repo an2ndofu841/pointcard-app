@@ -9,8 +9,13 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [message, setMessage] = useState('');
 
-  const handleAuth = async (e) => {
-    e.preventDefault();
+  // formのonSubmitではなく、ボタンのonClickで発火させる
+  const handleAuth = async () => {
+    if (!email || !password) {
+        setMessage('メールアドレスとパスワードを入力してください');
+        return;
+    }
+
     setLoading(true);
     setMessage('');
 
@@ -23,7 +28,8 @@ export default function Login() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         
-        // AdminLoginと同じ方式：成功したら即座に強制リロード
+        // 成功したらアラートを出して強制遷移
+        // alert('ログイン成功！トップページへ移動します。'); 
         window.location.href = '/';
       }
     } catch (error) {
@@ -49,7 +55,8 @@ export default function Login() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-8">
-          <form onSubmit={handleAuth} className="space-y-5">
+          {/* formタグをdivに変更し、エンターキーでの送信を防ぐ（誤動作防止） */}
+          <div className="space-y-5">
             <div>
               <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Email Address</label>
               <div className="relative">
@@ -60,7 +67,6 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
                   placeholder="name@example.com"
-                  required
                 />
               </div>
             </div>
@@ -75,7 +81,6 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
                   placeholder="••••••••"
-                  required
                 />
               </div>
             </div>
@@ -87,14 +92,15 @@ export default function Login() {
             )}
 
             <button
-              type="submit"
+              type="button" // submitではなくbuttonにする
+              onClick={handleAuth}
               disabled={loading}
               className="w-full bg-gray-900 text-white py-4 rounded-xl font-bold shadow-lg shadow-gray-900/20 hover:bg-black hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               {loading ? 'Loading...' : (isSignUp ? 'Create Account' : 'Sign In')}
               {!loading && <ArrowRight size={20} />}
             </button>
-          </form>
+          </div>
         </div>
 
         <div className="mt-8 text-center">
