@@ -22,9 +22,12 @@ export default function Login() {
         if (error) throw error;
         setMessage('確認メールを送信しました');
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate('/');
+        
+        // ログイン成功時にページを強制リロードしてルートへ
+        // React Routerの状態遷移だけではSupabaseのセッション状態更新が間に合わない場合があるため
+        window.location.href = '/';
       }
     } catch (error) {
       setMessage(error.message);
